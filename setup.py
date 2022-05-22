@@ -11,7 +11,7 @@ setup(
     author_email='rgoss@yat.ai',
     packages=['scythe'],
     license="MIT",
-    url='https://github.com/seatgeek/fuzzywuzzy',
+    url='https://github.com/yat-co/scythe-python',
     install_requires=install_requires,
     classifiers=[
         'Intended Audience :: Developers',
