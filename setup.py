@@ -6,10 +6,10 @@ install_requires = ['requests']
 
 setup(
     name='scythe-python',
-    version='1.0.0',
+    version='1.0.3',
     author='YAT, LLC',
     author_email='rgoss@yat.ai',
-    packages=['scythe'],
+    packages=['scythe', 'scythe.api_resources'],
     license="MIT",
     url='https://github.com/yat-co/scythe-python',
     install_requires=install_requires,
