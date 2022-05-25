@@ -4,18 +4,19 @@ from typing import Dict, List
 
 class EventType(AbstractResource):
     OBJECT_NAME = "event_type"
+    attrs = ["code", "domain_id", "description"]
 
-    def fetch(self, params: Dict, api_key: str = None) -> AbstractObject:
-        return super().fetch(params, api_key)
+    def fetch(self, params: Dict) -> AbstractObject:
+        return super().fetch(params)
 
-    def list(self, params: Dict = None, api_key: str = None) -> List[AbstractObject]:
-        return super().list(params, api_key)
+    def list(self, params: Dict = None) -> List[AbstractObject]:
+        return super().list(params)
 
-    def create(self, data: Dict, api_key: str = None) -> AbstractObject:
-        return super().create(data, api_key)
+    def create(self, data: Dict) -> AbstractObject:
+        return super().create(data)
 
-    def update(self, data: Dict, api_key: str = None) -> AbstractObject:
-        return super().update(data, api_key)
+    def update(self, data: Dict) -> AbstractObject:
+        return super().update(data)
 
-    def delete(self, data: Dict, api_key: str = None) -> AbstractObject:
-        return super().delete(data, api_key)
+    def delete(self, data: Dict) -> AbstractObject:
+        return super().delete(data)
