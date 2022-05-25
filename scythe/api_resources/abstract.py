@@ -1,4 +1,3 @@
-from itertools import count
 from scythe.request_resource import RequestClient, Response
 
 from typing import Dict, List
@@ -28,6 +27,10 @@ class AbstractObject(object):
     def __init__(self, response: Response, attrs: List[str]):
         self.response = response
         self.success = response.success
+        if not self.success:
+            self.object = SingleAbstractObject({})
+            return 
+
         self.object = SingleAbstractObject(
             data=response.data, attrs=attrs + self.base_attrs
         )
@@ -59,6 +62,10 @@ class AbstractList(object):
     def __init__(self, response: Response, attrs: List[str]):
         self.response = response
         self.success = response.success
+        if not self.success:
+            self.objects = []
+            return 
+
         self.count = response.data['count']
         self.next = response.data['next']
         self.previous = response.data['previous']
@@ -100,6 +107,16 @@ class AbstractResource(object):
         response = self.client.put(url=self.OBJECT_NAME, data=data)
         return AbstractObject(response=response, attrs=self.attrs)
 
-    def delete(self, data: Dict) -> AbstractObject:
+    def deactivate(self, data: Dict, api_key: str = None) -> AbstractObject:
+        response = self.client.delete(
+            url=f"{self.OBJECT_NAME}/deactivate/", data=data)
+        return AbstractObject(response=response)
+
+    def activate(self, data: Dict, api_key: str = None) -> AbstractObject:
+        response = self.client.delete(
+            url=f"{self.OBJECT_NAME}/activate/", data=data)
+        return AbstractObject(response=response)
+
+    def delete(self, data: Dict, api_key: str = None) -> AbstractObject:
         response = self.client.delete(url=self.OBJECT_NAME, data=data)
-        return AbstractObject(response=response, attrs=self.attrs)
+        return AbstractObject(response=response)

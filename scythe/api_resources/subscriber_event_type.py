@@ -1,4 +1,4 @@
-from scythe.api_resources.abstract import AbstractObject, AbstractResource
+from scythe.api_resources.abstract import AbstractObject, AbstractResource, AbstractListObject
 from typing import Dict, List
 
 
@@ -9,8 +9,8 @@ class SubscriberEventType(AbstractResource):
     def fetch(self, params: Dict) -> AbstractObject:
         return super().fetch(params)
 
-    def list(self, params: Dict = None) -> List[AbstractObject]:
-        return super().list(params)
+    def list(self, **kwargs) -> AbstractListObject:
+        return super().list(kwargs)
 
     def create(self, data: Dict) -> AbstractObject:
         return super().create(data)
