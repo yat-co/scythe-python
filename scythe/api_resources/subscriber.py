@@ -6,20 +6,20 @@ class Subscriber(AbstractResource):
     OBJECT_NAME = "subscriber"
     attrs = ["subscriber_key", "description"]
 
-    def fetch(self, params: Dict) -> AbstractObject:
-        return super().fetch(params)
+    def fetch(self, raise_exception: bool = False, **kwargs, ) -> AbstractObject:
+        return super().fetch(raise_exception=raise_exception, **kwargs)
 
-    def list(self, **kwargs) -> AbstractListObject:
-        return super().list(kwargs)
+    def list(self, raise_exception: bool = False, **kwargs) -> AbstractListObject:
+        return super().list(raise_exception=raise_exception, **kwargs)
 
-    def create(self, data: Dict) -> AbstractObject:
-        return super().create(data)
+    def create(self, data: Dict, raise_exception: bool = False) -> AbstractObject:
+        return super().create(data=data, raise_exception=raise_exception)
 
-    def update(self, data: Dict) -> AbstractObject:
-        return super().update(data)
+    def update(self, data: Dict, raise_exception: bool = False) -> AbstractObject:
+        return super().update(data=data, raise_exception=raise_exception)
 
-    def deactivate(self, data: Dict, api_key: str = None) -> AbstractObject:
-        return super().deactivate(data, api_key)
+    def deactivate(self, data: Dict, raise_exception: bool = False) -> AbstractObject:
+        return super().deactivate(data=data, raise_exception=raise_exception)
 
-    def activate(self, data: Dict, api_key: str = None) -> AbstractObject:
-        return super().activate(data, api_key)
+    def activate(self, data: Dict, raise_exception: bool = False) -> AbstractObject:
+        return super().activate(data=data, raise_exception=raise_exception)

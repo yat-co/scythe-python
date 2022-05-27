@@ -1,18 +1,21 @@
+from scythe.exceptions import NotFoundError, MultipleResultsError
 from scythe.request_resource import RequestClient, Response
 
 from typing import Dict, List
 
 
 class SingleAbstractObject(object):
-    def __init__(self, data, attrs = None):
+    def __init__(self, data, attrs=None):
         for key, value in data.items():
             if attrs is not None:
                 if key not in attrs:
                     continue
             if isinstance(value, (list, tuple)):
-                setattr(self, key, [SingleAbstractObject(val) if isinstance(val, dict) else val for val in value])
+                setattr(self, key, [SingleAbstractObject(val) if isinstance(
+                    val, dict) else val for val in value])
             else:
-                setattr(self, key, SingleAbstractObject(value) if isinstance(value, dict) else value)
+                setattr(self, key, SingleAbstractObject(value)
+                        if isinstance(value, dict) else value)
 
     def __str__(self) -> str:
         return str(self.__dict__)
@@ -29,7 +32,7 @@ class AbstractObject(object):
         self.success = response.success
         if not self.success:
             self.object = SingleAbstractObject({})
-            return 
+            return
 
         self.object = SingleAbstractObject(
             data=response.data, attrs=attrs + self.base_attrs
@@ -64,7 +67,7 @@ class AbstractList(object):
         self.success = response.success
         if not self.success:
             self.objects = []
-            return 
+            return
 
         self.count = response.data['count']
         self.next = response.data['next']
@@ -91,32 +94,55 @@ class AbstractResource(object):
     def __init__(self, client: RequestClient):
         self.client = client
 
-    def fetch(self, params: Dict) -> AbstractObject:
-        response = self.client.get(url=self.OBJECT_NAME, params=params)
+    def fetch(self, raise_exception=False, **kwargs) -> AbstractObject:
+        response = self.client.get(
+            url=self.OBJECT_NAME, params=kwargs, raise_exception=raise_exception,
+            single_object=True
+        )
         return AbstractObject(response=response, attrs=self.attrs)
 
-    def list(self, params: Dict) -> AbstractList:
-        response = self.client.get(url=self.OBJECT_NAME, params=params)
+    def fetch_or_create(self, raise_exception=False, **kwargs) -> AbstractObject:
+        try:
+            response = self.client.get(
+                url=self.OBJECT_NAME, params=kwargs, raise_exception=raise_exception,
+                single_object=True
+            )
+        except NotFoundError:
+            return self.create(data=kwargs, raise_exception=raise_exception)
+        return AbstractObject(response=response, attrs=self.attrs)
+
+    def list(self, raise_exception=False, **kwargs) -> AbstractList:
+        response = self.client.get(
+            url=self.OBJECT_NAME, params=kwargs, raise_exception=raise_exception
+        )
         return AbstractList(response=response, attrs=self.attrs)
 
-    def create(self, data: Dict) -> AbstractObject:
-        response = self.client.post(url=self.OBJECT_NAME, data=data)
+    def create(self, data: Dict, raise_exception=False) -> AbstractObject:
+        response = self.client.post(
+            url=self.OBJECT_NAME, data=data, raise_exception=raise_exception
+        )
         return AbstractObject(response=response, attrs=self.attrs)
 
-    def update(self, data: Dict) -> AbstractObject:
-        response = self.client.put(url=self.OBJECT_NAME, data=data)
+    def update(self, data: Dict, raise_exception=False) -> AbstractObject:
+        response = self.client.put(
+            url=self.OBJECT_NAME, data=data, raise_exception=raise_exception
+        )
         return AbstractObject(response=response, attrs=self.attrs)
 
-    def deactivate(self, data: Dict, api_key: str = None) -> AbstractObject:
+    def deactivate(self, data: Dict, raise_exception=False) -> AbstractObject:
         response = self.client.delete(
-            url=f"{self.OBJECT_NAME}/deactivate/", data=data)
+            url=f"{self.OBJECT_NAME}/deactivate/", data=data, raise_exception=raise_exception
+        )
         return AbstractObject(response=response)
 
-    def activate(self, data: Dict, api_key: str = None) -> AbstractObject:
+    def activate(self, data: Dict, raise_exception=False) -> AbstractObject:
         response = self.client.delete(
-            url=f"{self.OBJECT_NAME}/activate/", data=data)
+            url=f"{self.OBJECT_NAME}/activate/", data=data, raise_exception=raise_exception
+        )
         return AbstractObject(response=response)
 
-    def delete(self, data: Dict, api_key: str = None) -> AbstractObject:
-        response = self.client.delete(url=self.OBJECT_NAME, data=data)
+    def delete(self, data: Dict, raise_exception=False) -> AbstractObject:
+        response = self.client.delete(
+            url=self.OBJECT_NAME, data=data, raise_exception=raise_exception
+        )
         return AbstractObject(response=response)
