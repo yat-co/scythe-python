@@ -1,6 +1,7 @@
 """
 Resource 
 """
+import json
 import requests
 from typing import Dict
 from scythe.exceptions import (
@@ -153,6 +154,10 @@ class RequestClient(object):
 
     def post(self, url: str, data: Dict, raise_exception: bool = False):
         rurl, rheaders = self.build_request(method="post", url=url)
+        # Convert Data to JSON
+        if isinstance(data, dict):
+            data = json.dumps(data)
+
         response = self.session.post(
             url=rurl, headers=rheaders, data=data
         )
@@ -163,6 +168,10 @@ class RequestClient(object):
 
     def put(self, url: str, data: Dict, raise_exception: bool = False):
         rurl, rheaders = self.build_request(method="put", url=url)
+        # Convert Data to JSON
+        if isinstance(data, dict):
+            data = json.dumps(data)
+
         response = self.session.put(
             url=rurl, headers=rheaders, data=data
         )
@@ -173,6 +182,10 @@ class RequestClient(object):
 
     def delete(self, url: str, data: Dict, raise_exception: bool = False):
         rurl, rheaders = self.build_request(method="delete", url=url)
+        # Convert Data to JSON
+        if isinstance(data, dict):
+            data = json.dumps(data)
+
         response = self.session.delete(
             url=rurl, headers=rheaders, data=data
         )

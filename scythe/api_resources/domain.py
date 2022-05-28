@@ -4,7 +4,7 @@ from typing import Dict, List
 
 class Domain(AbstractResource):
     OBJECT_NAME = "domain"
-    attrs = ["code", "description"]
+    attrs = ["code", "description", "active"]
 
     def fetch(self, raise_exception: bool = False, **kwargs, ) -> AbstractObject:
         return super().fetch(raise_exception=raise_exception, **kwargs)
@@ -18,8 +18,8 @@ class Domain(AbstractResource):
     def update(self, data: Dict, raise_exception: bool = False) -> AbstractObject:
         return super().update(data=data, raise_exception=raise_exception)
 
-    def deactivate(self, data: Dict, raise_exception: bool = False) -> AbstractObject:
-        return super().deactivate(data=data, raise_exception=raise_exception)
+    def deactivate(self, raise_exception: bool = False, **kwargs) -> AbstractObject:
+        return super().deactivate(data=kwargs, raise_exception=raise_exception)
 
-    def activate(self, data: Dict, raise_exception: bool = False) -> AbstractObject:
-        return super().activate(data=data, raise_exception=raise_exception)
+    def activate(self, raise_exception: bool = False, **kwargs) -> AbstractObject:
+        return super().activate(data=kwargs, raise_exception=raise_exception)

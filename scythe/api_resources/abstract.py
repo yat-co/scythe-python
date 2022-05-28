@@ -1,4 +1,4 @@
-from scythe.exceptions import NotFoundError, MultipleResultsError
+from scythe.exceptions import NotFoundError
 from scythe.request_resource import RequestClient, Response
 
 from typing import Dict, List
@@ -16,6 +16,9 @@ class SingleAbstractObject(object):
             else:
                 setattr(self, key, SingleAbstractObject(value)
                         if isinstance(value, dict) else value)
+
+    def dict(self):
+        return self.__dict__
 
     def __str__(self) -> str:
         return str(self.__dict__)
@@ -130,19 +133,19 @@ class AbstractResource(object):
         return AbstractObject(response=response, attrs=self.attrs)
 
     def deactivate(self, data: Dict, raise_exception=False) -> AbstractObject:
-        response = self.client.delete(
-            url=f"{self.OBJECT_NAME}/deactivate/", data=data, raise_exception=raise_exception
+        response = self.client.post(
+            url=f"{self.OBJECT_NAME}/deactivate", data=data, raise_exception=raise_exception
         )
-        return AbstractObject(response=response)
+        return AbstractObject(response=response, attrs=self.attrs)
 
     def activate(self, data: Dict, raise_exception=False) -> AbstractObject:
-        response = self.client.delete(
-            url=f"{self.OBJECT_NAME}/activate/", data=data, raise_exception=raise_exception
+        response = self.client.post(
+            url=f"{self.OBJECT_NAME}/activate", data=data, raise_exception=raise_exception
         )
-        return AbstractObject(response=response)
+        return AbstractObject(response=response, attrs=self.attrs)
 
     def delete(self, data: Dict, raise_exception=False) -> AbstractObject:
         response = self.client.delete(
             url=self.OBJECT_NAME, data=data, raise_exception=raise_exception
         )
-        return AbstractObject(response=response)
+        return AbstractObject(response=response, attrs=self.attrs)
